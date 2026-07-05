@@ -55,7 +55,7 @@ The project focuses on both **UI design** and **JavaScript-based functionality**
 
 # 📷 Project Preview
 
-![FinTrack Pro](./preview.png)
+![FinTrack Pro](https://fintrack-gbfeg8opg-sagar-lekhwanis-projects.vercel.app)
 
 ---
 
