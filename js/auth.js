@@ -1,7 +1,7 @@
-/* ==========================================
+/* 
    FinTrack Pro
    Authentication
-========================================== */
+*/
 
 const USER_KEY = "fintrack_user";
 
@@ -9,9 +9,9 @@ const loginForm = document.getElementById("loginForm");
 
 const registerForm = document.getElementById("registerForm");
 
-/* ==========================
+/* 
    Password Toggle
-========================== */
+ */
 
 const togglePassword = document.getElementById("togglePassword");
 
@@ -65,9 +65,7 @@ if(toggleRegister){
 
 }
 
-/* ==========================
-   Register
-========================== */
+//    Register 
 
 if(registerForm){
 
@@ -115,9 +113,9 @@ if(registerForm){
 
 }
 
-/* ==========================
-   Login
-========================== */
+/*
+   Login 
+*/
 
 if(loginForm){
 
@@ -191,9 +189,9 @@ if(loginForm){
 
 }
 
-/* ==========================
+/* 
    Protect Dashboard
-========================== */
+*/
 
 if(
 
@@ -215,9 +213,9 @@ if(
 
 }
 
-/* ==========================
+/*
    Logout
-========================== */
+*/
 
 const logout=document.getElementById("logoutBtn");
 

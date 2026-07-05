@@ -55,6 +55,36 @@ const Utils = {
 
         }, 2500);
 
-    }
+    },
+
+    loadProfile(){
+
+        const profile=Storage.getProfile();
+
+        const profileName=document.getElementById("profileName");
+
+        if(profileName){
+
+            profileName.textContent=profile.name;
+
+        }
+
+        const fullName=document.getElementById("fullName");
+
+        if(fullName){
+
+            fullName.value=profile.name;
+
+        }
+
+        const currency=document.getElementById("currency");
+
+        if(currency){
+
+            currency.value=profile.currency;
+
+        }
+
+    },
 
 };

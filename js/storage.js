@@ -143,14 +143,24 @@ function getTheme() {
  */
 function resetApplication() {
 
+    // Clear only finance data
     localStorage.removeItem(STORAGE_KEYS.TRANSACTIONS);
 
-    localStorage.removeItem(STORAGE_KEYS.PROFILE);
+    // Reset theme to default (light)
+    saveTheme("light");
 
-    localStorage.removeItem(STORAGE_KEYS.THEME);
+    // Keep user name, reset only currency
+    const profile = getProfile();
+
+    saveProfile({
+
+        name: profile.name,
+
+        currency: "USD"
+
+    });
 
 }
-
 /* ==========================================================
    STATISTICS
 ==========================================================*/

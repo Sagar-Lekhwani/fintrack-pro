@@ -1,16 +1,10 @@
-/* ==========================================================
-   FinTrack Pro
-   app.js
-   Application Entry Point
-==========================================================*/
+
 
 document.addEventListener("DOMContentLoaded", () => {
 
     console.log("🚀 FinTrack Pro Started");
 
-    // ==============================
     // Dashboard
-    // ==============================
 
     if (typeof Dashboard !== "undefined") {
 
@@ -18,9 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    // ==============================
-    // Transactions
-    // ==============================
+//    Transaction 
 
     if (typeof Transactions !== "undefined") {
 
@@ -38,9 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    // ==============================
+   
     // Chart
-    // ==============================
 
     if (typeof ChartManager !== "undefined") {
 
@@ -48,9 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-    // ==============================
     // Settings
-    // ==============================
 
     if (typeof Settings !== "undefined") {
 

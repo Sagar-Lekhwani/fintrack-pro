@@ -2,7 +2,7 @@ const Settings = {
 
     init(){
 
-        this.loadProfile();
+        Utils.loadProfile();
 
         this.bindEvents();
 
@@ -94,36 +94,6 @@ toggleTheme(){
 
 },
 
-    loadProfile(){
-
-        const profile=Storage.getProfile();
-
-        const profileName=document.getElementById("profileName");
-
-        if(profileName){
-
-            profileName.textContent=profile.name;
-
-        }
-
-        const fullName=document.getElementById("fullName");
-
-        if(fullName){
-
-            fullName.value=profile.name;
-
-        }
-
-        const currency=document.getElementById("currency");
-
-        if(currency){
-
-            currency.value=profile.currency;
-
-        }
-
-    },
-
     saveProfile() {
 
     const name = document.getElementById("fullName").value.trim();
@@ -136,7 +106,7 @@ toggleTheme(){
     });
 
     // Update navbar name
-    this.loadProfile();
+    Utils.loadProfile();
 
     // Refresh Dashboard Cards
     if (typeof Dashboard !== "undefined") {
@@ -159,7 +129,7 @@ toggleTheme(){
 
 resetData() {
 
-    if (!confirm("Reset all saved data?")) {
+    if (!confirm("Reset all financial data?")) {
 
         return;
 
@@ -167,36 +137,33 @@ resetData() {
 
     Storage.resetApplication();
 
-    // Reload dashboard values
+    // Update settings form
+    document.getElementById("currency").value = "USD";
+
+    const themeToggle = document.getElementById("themeToggle");
+
+    if (themeToggle) {
+
+        themeToggle.checked = false;
+
+    }
+
+    document.body.classList.remove("dark");
+
+    // Refresh UI
     Dashboard.refresh();
 
-    // Reload table
     Transactions.refresh();
 
-    // Reload chart
     if (typeof ChartManager !== "undefined") {
 
         ChartManager.update();
 
     }
 
-    // Reset profile inputs
-    document.getElementById("fullName").value = "Guest";
+    Utils.loadProfileName();
 
-    document.getElementById("currency").value = "USD";
-
-    // Remove dark mode
-    document.body.classList.remove("dark");
-
-    const toggle = document.getElementById("themeToggle");
-
-    if (toggle) {
-
-        toggle.checked = false;
-
-    }
-
-    Utils.showToast("All data reset successfully");
+    Utils.showToast("All financial data has been reset.");
 
 }
 

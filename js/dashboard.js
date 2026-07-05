@@ -12,14 +12,25 @@ const Dashboard = {
 
     init() {
 
-        this.balanceEl = document.getElementById("balance");
-        this.incomeEl = document.getElementById("income");
-        this.expenseEl = document.getElementById("expense");
-        this.countEl = document.getElementById("count");
+    this.balanceEl = document.getElementById("balance");
+    this.incomeEl = document.getElementById("income");
+    this.expenseEl = document.getElementById("expense");
+    this.countEl = document.getElementById("count");
 
-        this.update();
+    // Load logged in user
+    const profile = Storage.getProfile();
 
-    },
+    const profileName = document.getElementById("profileName");
+
+    if (profileName) {
+
+        profileName.textContent = profile.name;
+
+    }
+
+    this.update();
+
+},
 
     // ==============================
     // Update Dashboard
