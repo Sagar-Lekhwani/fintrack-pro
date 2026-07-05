@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>FinTrack Pro | Dashboard</title>
+
+    <!-- Google Font -->
+
+    <link rel="preconnect"
+        href="https://fonts.googleapis.com">
+
+    <link rel="preconnect"
+        href="https://fonts.gstatic.com"
+        crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Font Awesome -->
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- Chart JS -->
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <link rel="stylesheet"
+        href="css/style.css">
+
+</head>
+
+<body>
+
+    <!-- ================= Sidebar ================= -->
+
+    <aside class="sidebar">
+
+        <div>
+
+            <div class="logo">
+
+                <i class="fa-solid fa-layer-group"></i>
+
+                <div>
+
+                    <h2>FinTrack Pro</h2>
+
+                    <span>Enterprise Finance</span>
+
+                </div>
+
+            </div>
+
+           <nav class="sidebar-nav">
+
+    <ul>
+
+        <li
+            id="dashboardNav"
+            class="active">
+
+            <i class="fa-solid fa-table-columns"></i>
+
+            <span>Dashboard</span>
+
+        </li>
+
+        <li
+            id="settingsNav">
+
+            <i class="fa-solid fa-gear"></i>
+
+            <span>Settings</span>
+
+        </li>
+
+    </ul>
+
+</nav>
+
+        </div>
+
+        <button
+            class="add-btn"
+            id="openModal">
+
+            <i class="fa-solid fa-plus"></i>
+
+            Add Transaction
+
+        </button>
+
+    </aside>
+
+    <!-- ================= Main ================= -->
+
+    <main class="main">
+
+        <!-- ================= Navbar ================= -->
+
+        <header class="navbar">
+
+            <div></div>
+
+            <div class="user">
+
+                <span id="profileName">
+
+                    Guest
+
+                </span>
+
+                <button id="logoutBtn">
+
+                    <i class="fa-solid fa-right-from-bracket"></i>
+
+                    Logout
+
+                </button>
+
+            </div>
+
+        </header>
+
+        <!-- ================= Heading ================= -->
+
+        <section id="dashboardSection">
+
+        <section class="page-title">
+
+            <h1>
+
+                Financial Overview
+
+            </h1>
+
+            <p>
+
+                Real-time financial tracking dashboard
+
+            </p>
+
+        </section>
+
+        <!-- ================= Cards ================= -->
+
+        <section class="cards">
+
+            <!-- Balance -->
+
+            <div class="card">
+
+                <div class="icon blue">
+
+                    <i class="fa-solid fa-wallet"></i>
+
+                </div>
+
+                <p>
+
+                    Current Balance
+
+                </p>
+
+                <h2 id="balance">
+
+                    $0.00
+
+                </h2>
+
+            </div>
+
+            <!-- Income -->
+
+            <div class="card">
+
+                <div class="icon green">
+
+                    <i class="fa-solid fa-arrow-trend-up"></i>
+
+                </div>
+
+                <p>
+
+                    Total Income
+
+                </p>
+
+                <h2 id="income">
+
+                    $0.00
+
+                </h2>
+
+            </div>
+
+            <!-- Expense -->
+
+            <div class="card">
+
+                <div class="icon red">
+
+                    <i class="fa-solid fa-arrow-trend-down"></i>
+
+                </div>
+
+                <p>
+
+                    Total Expense
+
+                </p>
+
+                <h2 id="expense">
+
+                    $0.00
+
+                </h2>
+
+            </div>
+
+            <!-- Transactions -->
+
+            <div class="card">
+
+                <div class="icon blue">
+
+                    <i class="fa-solid fa-receipt"></i>
+
+                </div>
+
+                <p>
+
+                    Transactions
+
+                </p>
+
+                <h2 id="count">
+
+                    0
+
+                </h2>
+
+            </div>
+
+        </section>
+
+        <!-- PART 3B STARTS HERE -->
+                 <!-- ================= Chart & Preferences ================= -->
+
+        <section class="middle">
+
+            <!-- Cash Flow Chart -->
+
+            <div class="chart-card">
+
+                <div class="section-header">
+
+                    <div>
+
+                        <h2>Cash Flow Analysis</h2>
+
+                        <p>Income vs Expense Overview</p>
+
+                    </div>
+
+                </div>
+
+                <div class="chart-wrapper">
+
+                    <canvas id="cashChart"></canvas>
+
+                </div>
+
+            </div>
+
+            <!-- Preferences -->
+
+            <div class="preferences">
+
+                <h2>Preferences</h2>
+
+                <p class="sub-title">
+
+                    Personalize your dashboard
+
+                </p>
+
+                <div class="setting">
+
+                    <span>
+
+                        Dark Mode
+
+                    </span>
+
+                    <label class="switch">
+
+                        <input
+                            type="checkbox"
+                            id="themeToggle">
+
+                        <span class="slider"></span>
+
+                    </label>
+
+                </div>
+
+                <button
+                    class="reset"
+                    id="resetBtn">
+
+                    <i class="fa-solid fa-trash"></i>
+
+                    Reset All Data
+
+                </button>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= Transactions ================= -->
+
+        <section class="table-card">
+
+            <div class="table-header">
+
+                <div>
+
+                    <h2>
+
+                        All Transactions
+
+                    </h2>
+
+                    <p>
+
+                        Manage your financial records
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="table-actions">
+
+                <input
+
+                    type="text"
+
+                    id="search"
+
+                    placeholder="Search transactions..."
+
+                >
+
+                <select id="filter">
+
+                    <option value="all">
+
+                        All Types
+
+                    </option>
+
+                    <option value="income">
+
+                        Income
+
+                    </option>
+
+                    <option value="expense">
+
+                        Expense
+
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <div class="table-wrapper">
+
+                <table>
+
+                    <thead>
+
+                        <tr>
+
+                            <th>Date</th>
+
+                            <th>Description</th>
+
+                            <th>Category</th>
+
+                            <th>Type</th>
+
+                            <th>Amount</th>
+
+                            <th>Action</th>
+
+                        </tr>
+
+                    </thead>
+
+                    <tbody id="transactionTable">
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </section>
+
+        </section>
+
+        <section
+    id="settingsSection"
+    class="hidden">
+
+    <section class="page-title">
+
+        <h1>
+
+            Settings
+
+        </h1>
+
+        <p>
+
+            Manage your account preferences
+
+        </p>
+
+    </section>
+
+    <section class="settings-container">
+
+        <div class="settings-card fade-card">
+
+            <h2>
+
+                Profile Details
+
+            </h2>
+
+            <p>
+
+                Update your personal information.
+
+            </p>
+
+            <form id="profileForm">
+
+                <div class="form-group">
+
+                    <label>
+
+                        Full Name
+
+                    </label>
+
+                    <input
+                        id="fullName"
+                        type="text">
+
+                </div>
+
+                <div class="form-group">
+
+                    <label>
+
+                        Preferred Currency
+
+                    </label>
+
+                    <select id="currency">
+
+                        <option value="USD">USD ($)</option>
+
+                        <option value="INR">INR (₹)</option>
+
+                        <option value="EUR">EUR (€)</option>
+
+                        <option value="GBP">GBP (£)</option>
+
+                        <option value="JPY">JPY (¥)</option>
+
+                    </select>
+
+                </div>
+
+                <button
+                    class="save">
+
+                    Save Changes
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+</section>
+
+        <!-- PART 3C STARTS HERE -->
+                 <!-- ================= Add Transaction Modal ================= -->
+
+        <div class="modal" id="modal">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h2>Add Transaction</h2>
+
+                    <button
+                        type="button"
+                        class="close-modal"
+                        id="closeModal">
+
+                        <i class="fa-solid fa-xmark"></i>
+
+                    </button>
+
+                </div>
+
+                <form id="transactionForm">
+
+                    <div class="form-group">
+
+                        <label>Date</label>
+
+                        <input
+                            type="date"
+                            id="date"
+                            required>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Description</label>
+
+                        <input
+                            type="text"
+                            id="description"
+                            placeholder="Enter description"
+                            required>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>Category</label>
+
+                            <select id="category">
+
+                                <option value="Salary">Salary</option>
+
+                                <option value="Business">Business</option>
+
+                                <option value="Freelance">Freelance</option>
+
+                                <option value="Investment">Investment</option>
+
+                                <option value="Food">Food</option>
+
+                                <option value="Shopping">Shopping</option>
+
+                                <option value="Travel">Travel</option>
+
+                                <option value="Bills">Bills</option>
+
+                                <option value="Health">Health</option>
+
+                                <option value="Entertainment">Entertainment</option>
+
+                                <option value="Education">Education</option>
+
+                                <option value="Other">Other</option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="form-group">
+
+                            <label>Type</label>
+
+                            <select id="type">
+
+                                <option value="income">
+
+                                    Income
+
+                                </option>
+
+                                <option value="expense">
+
+                                    Expense
+
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+
+                        <label>Amount</label>
+
+                        <input
+                            type="number"
+                            id="amount"
+                            placeholder="Enter amount"
+                            min="1"
+                            step="0.01"
+                            required>
+
+                    </div>
+
+                    <div class="modal-actions">
+
+                        <button
+                            type="button"
+                            class="cancel"
+                            id="closeModalBtn">
+
+                            Cancel
+
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="save">
+
+                            <i class="fa-solid fa-plus"></i>
+
+                            Add Transaction
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <!-- ================= Scripts ================= -->
+
+    <script src="js/storage.js"></script>
+
+    <script src="js/currency.js"></script>
+
+    <script src="js/dashboard.js"></script>
+
+    <script src="js/chart.js"></script>
+
+    <script src="js/settings.js"></script>
+
+    <script src="js/transactions.js"></script>
+
+    <script src="js/utils.js"></script>
+
+    <script src="js/navigation.js"></script>
+
+    <script src="js/app.js"></script>
+
+</body>
+
+</html>
