@@ -107,9 +107,12 @@ const Transactions = {
 
             "Add Transaction";
 
-        document.querySelector(".save").innerHTML =
+        const saveBtn = document.getElementById("saveTransactionBtn");
 
-            `<i class="fa-solid fa-plus"></i> Add Transaction`;
+        saveBtn.innerHTML = `
+    <i class="fa-solid fa-plus"></i>
+    Add Transaction
+`;
 
         this.modal.classList.add("active");
 
@@ -129,9 +132,12 @@ const Transactions = {
 
             "Add Transaction";
 
-        document.querySelector(".save").innerHTML =
+        const saveBtn = document.getElementById("saveTransactionBtn");
 
-            `<i class="fa-solid fa-plus"></i> Add Transaction`;
+        saveBtn.innerHTML = `
+    <i class="fa-solid fa-plus"></i>
+    Add Transaction
+`;
 
         this.modal.classList.remove("active");
 

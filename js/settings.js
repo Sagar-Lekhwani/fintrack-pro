@@ -6,39 +6,93 @@ const Settings = {
 
         this.bindEvents();
 
+        this.loadTheme();
+
     },
 
     bindEvents(){
 
-        const form=document.getElementById("profileForm");
+    const form=document.getElementById("profileForm");
 
-        if(form){
+    if(form){
 
-            form.addEventListener("submit",(e)=>{
+        form.addEventListener("submit",(e)=>{
 
-                e.preventDefault();
+            e.preventDefault();
 
-                this.saveProfile();
+            this.saveProfile();
 
-            });
+        });
 
-        }
+    }
 
-        const logout=document.getElementById("logoutBtn");
+    const theme=document.getElementById("themeToggle");
 
-        if(logout){
+    if(theme){
 
-            logout.addEventListener("click",()=>{
+        theme.addEventListener("change",()=>{
 
-                localStorage.removeItem("loggedIn");
+            this.toggleTheme();
 
-                window.location.href="index.html";
+        });
 
-            });
+    }
 
-        }
+    const reset=document.getElementById("resetBtn");
 
-    },
+    if(reset){
+
+        reset.addEventListener("click",()=>{
+
+            this.resetData();
+
+        });
+
+    }
+
+},
+
+loadTheme(){
+
+    const dark=localStorage.getItem("theme")==="dark";
+
+    document.body.classList.toggle("dark",dark);
+
+    const toggle=document.getElementById("themeToggle");
+
+    if(toggle){
+
+        toggle.checked=dark;
+
+    }
+
+},
+
+toggleTheme(){
+
+    document.body.classList.toggle("dark");
+
+    const dark=document.body.classList.contains("dark");
+
+    localStorage.setItem(
+
+        "theme",
+
+        dark?"dark":"light"
+
+    );
+
+    Utils.showToast(
+
+        dark
+
+        ? "Dark mode enabled"
+
+        : "Light mode enabled"
+
+    );
+
+},
 
     loadProfile(){
 
@@ -101,6 +155,51 @@ const Settings = {
 
     Utils.showToast("Profile updated successfully");
 
+},
+
+resetData() {
+
+    if (!confirm("Reset all saved data?")) {
+
+        return;
+
+    }
+
+    Storage.resetApplication();
+
+    // Reload dashboard values
+    Dashboard.refresh();
+
+    // Reload table
+    Transactions.refresh();
+
+    // Reload chart
+    if (typeof ChartManager !== "undefined") {
+
+        ChartManager.update();
+
+    }
+
+    // Reset profile inputs
+    document.getElementById("fullName").value = "Guest";
+
+    document.getElementById("currency").value = "USD";
+
+    // Remove dark mode
+    document.body.classList.remove("dark");
+
+    const toggle = document.getElementById("themeToggle");
+
+    if (toggle) {
+
+        toggle.checked = false;
+
+    }
+
+    Utils.showToast("All data reset successfully");
+
 }
+
+
 
 };
