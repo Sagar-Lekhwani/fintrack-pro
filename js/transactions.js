@@ -9,9 +9,9 @@ let editingTransactionId = null;
 
 const Transactions = {
 
-    // =====================================
+    // ============================
     // Variables
-    // =====================================
+    // ============================
 
     transactions: [],
 
@@ -25,9 +25,9 @@ const Transactions = {
 
     closeBtn: null,
 
-    // =====================================
+    // ============================
     // Initialize
-    // =====================================
+    // ============================
 
     init() {
 
@@ -47,112 +47,119 @@ const Transactions = {
 
     },
 
-    // =====================================
-    // Event Listeners
-    // =====================================
+    // ============================
+    // Events
+    // ============================
 
     bindEvents() {
 
-        this.openBtn.addEventListener(
+        this.openBtn.addEventListener("click", () => {
 
-            "click",
+            this.openModal();
 
-            () => this.openModal()
+        });
 
-        );
+        this.closeBtn.addEventListener("click", () => {
 
-        this.closeBtn.addEventListener(
+            this.closeModal();
 
-            "click",
+        });
 
-            () => this.closeModal()
+        document.getElementById("closeModalBtn")
 
-        );
+            ?.addEventListener("click", () => {
 
-        window.addEventListener(
+                this.closeModal();
 
-            "click",
+            });
 
-            (event) => {
+        window.addEventListener("click", (e) => {
 
-                if (event.target === this.modal) {
+            if (e.target === this.modal) {
 
-                    this.closeModal();
-
-                }
+                this.closeModal();
 
             }
 
-        );
+        });
 
-        this.form.addEventListener(
+        this.form.addEventListener("submit", (e) => {
 
-    "submit",
+            e.preventDefault();
 
-    (event) => {
+            this.saveTransaction();
 
-        event.preventDefault();
-
-        this.saveTransaction();
-
-    }
-
-);
+        });
 
     },
 
-    // =====================================
+    // ============================
     // Open Modal
-    // =====================================
+    // ============================
 
     openModal() {
+
+        editingTransactionId = null;
+
+        this.form.reset();
+
+        document.querySelector(".modal-header h2").textContent =
+
+            "Add Transaction";
+
+        document.querySelector(".save").innerHTML =
+
+            `<i class="fa-solid fa-plus"></i> Add Transaction`;
 
         this.modal.classList.add("active");
 
     },
 
-    // =====================================
+    // ============================
     // Close Modal
-    // =====================================
+    // ============================
 
     closeModal() {
 
-        this.modal.classList.remove("active");
+        editingTransactionId = null;
 
         this.form.reset();
 
+        document.querySelector(".modal-header h2").textContent =
+
+            "Add Transaction";
+
+        document.querySelector(".save").innerHTML =
+
+            `<i class="fa-solid fa-plus"></i> Add Transaction`;
+
+        this.modal.classList.remove("active");
+
     },
 
-    // =====================================
-    // Form Values
-    // =====================================
+    // ============================
+    // Form Data
+    // ============================
 
     getFormData() {
 
         return {
 
-            id: Date.now(),
-
             date: document.getElementById("date").value,
 
-            description: document
-                .getElementById("description")
+            description: document.getElementById("description")
+
                 .value
+
                 .trim(),
 
-            category: document
-                .getElementById("category")
-                .value,
+            category: document.getElementById("category").value,
 
-            type: document
-                .getElementById("type")
-                .value,
+            type: document.getElementById("type").value,
 
             amount: Number(
 
-                document
-                    .getElementById("amount")
-                    .value
+                document.getElementById("amount").value
 
             )
 
@@ -160,15 +167,15 @@ const Transactions = {
 
     },
 
-    // =====================================
+    // ============================
     // Validation
-    // =====================================
+    // ============================
 
     validate(transaction) {
 
-        if (transaction.date === "") {
+        if (!transaction.date) {
 
-            Utils.showToast("Please select date.");
+            Utils.showToast("Please select a date.", "error");
 
             return false;
 
@@ -176,7 +183,7 @@ const Transactions = {
 
         if (transaction.description === "") {
 
-            Utils.showToast("Description is required.");
+            Utils.showToast("Description is required.", "error");
 
             return false;
 
@@ -184,7 +191,13 @@ const Transactions = {
 
         if (transaction.amount <= 0 || isNaN(transaction.amount)) {
 
-            Utils.showToast("Amount should be greater than zero.");
+            Utils.showToast(
+
+                "Amount should be greater than zero.",
+
+                "error"
+
+            );
 
             return false;
 
@@ -194,11 +207,11 @@ const Transactions = {
 
     },
 
-    // =====================================
-    // Add Transaction
-    // =====================================
+    // ============================
+    // Add / Edit Transaction
+    // ============================
 
-    addTransaction() {
+    saveTransaction() {
 
         const transaction = this.getFormData();
 
@@ -208,18 +221,61 @@ const Transactions = {
 
         }
 
-        Storage.addTransaction(transaction);
+        if (editingTransactionId === null) {
 
-        this.transactions = Storage.getTransactions();
+            transaction.id = Date.now();
 
-        this.closeModal();
+            Storage.addTransaction(transaction);
+
+            Utils.showToast(
+
+                "Transaction added successfully."
+
+            );
+
+        }
+
+        else {
+
+            const transactions =
+
+                Storage.getTransactions();
+
+            const index = transactions.findIndex(
+
+                t => t.id == editingTransactionId
+
+            );
+
+            if (index !== -1) {
+
+                transactions[index] = {
+
+                    ...transaction,
+
+                    id: editingTransactionId
+
+                };
+
+                Storage.saveTransactions(transactions);
+
+            }
+
+            Utils.showToast(
+
+                "Transaction updated successfully."
+
+            );
+
+            editingTransactionId = null;
+
+        }
+
+        this.transactions =
+
+            Storage.getTransactions();
 
         Dashboard.refresh();
-
-        // These functions will be
-        // implemented in Part 4B
-
-        this.render();
 
         if (typeof ChartManager !== "undefined") {
 
@@ -227,16 +283,16 @@ const Transactions = {
 
         }
 
+        this.render();
+
+        this.closeModal();
+
     },
 
-    /* ==========================================================
-   Part 4B
-   Render & Delete Transactions
-==========================================================*/
 
-    // =====================================
+    // ============================
     // Render Transactions
-    // =====================================
+    // ============================
 
     render(transactions = this.transactions) {
 
@@ -246,25 +302,25 @@ const Transactions = {
 
             this.tableBody.innerHTML = `
 
-                <tr>
+        <tr>
 
-                    <td colspan="6">
+            <td colspan="6">
 
-                        <div class="empty-state">
+                <div class="empty-state">
 
-                            <i class="fa-solid fa-wallet"></i>
+                    <i class="fa-solid fa-wallet"></i>
 
-                            <h3>No Transactions Found</h3>
+                    <h3>No Transactions Found</h3>
 
-                            <p>Add your first transaction to get started.</p>
+                    <p>Add your first transaction to get started.</p>
 
-                        </div>
+                </div>
 
-                    </td>
+            </td>
 
-                </tr>
+        </tr>
 
-            `;
+        `;
 
             return;
 
@@ -276,117 +332,67 @@ const Transactions = {
 
             row.innerHTML = `
 
-                <td>${this.formatDate(transaction.date)}</td>
+        <td>${this.formatDate(transaction.date)}</td>
 
-                <td>${transaction.description}</td>
+        <td>${transaction.description}</td>
 
-                <td>${transaction.category}</td>
+        <td>${transaction.category}</td>
 
-                <td>
+        <td>
 
-                    <span class="badge ${transaction.type}">
+            <span class="badge ${transaction.type}">
 
-                        ${this.capitalize(transaction.type)}
+                ${this.capitalize(transaction.type)}
 
-                    </span>
+            </span>
 
-                </td>
+        </td>
 
-                <td class="${transaction.type}">
+        <td class="${transaction.type}">
 
-                    ${Currency.format(transaction.amount)}
+            ${Currency.format(transaction.amount)}
 
-                </td>
+        </td>
 
-                <td>
+        <td>
 
-    <button
-        class="edit-btn"
-        onclick="Transactions.editTransaction('${transaction.id}')">
+            <button
+                class="edit-btn"
+                onclick="Transactions.editTransaction(${transaction.id})">
 
-        <i class="fa-solid fa-pen"></i>
+                <i class="fa-solid fa-pen"></i>
 
-    </button>
+            </button>
 
-    <button
-        class="delete-btn"
-        onclick="Transactions.deleteTransaction('${transaction.id}')">
+            <button
+                class="delete-btn"
+                onclick="Transactions.deleteTransaction(${transaction.id})">
 
-        <i class="fa-solid fa-trash"></i>
+                <i class="fa-solid fa-trash"></i>
 
-    </button>
+            </button>
 
-</td>
+        </td>
 
-            `;
+        `;
 
             this.tableBody.appendChild(row);
 
         });
 
-        this.attachDeleteEvents();
-
     },
 
-    // =====================================
-    // Delete Events
-    // =====================================
-
-    attachDeleteEvents() {
-
-        const buttons = document.querySelectorAll(".delete-btn");
-
-        buttons.forEach(button => {
-
-            button.addEventListener("click", () => {
-
-                const id = Number(button.dataset.id);
-
-                this.deleteTransaction(id);
-
-            });
-
-        });
-
-    },
-
-    // =====================================
-    // Delete Transaction
-    // =====================================
-
-    deleteTransaction(id) {
-
-        const confirmed = confirm(
-
-            "Delete this transaction?"
-
-        );
-
-        if (!confirmed) return;
-
-        Storage.deleteTransaction(id);
-
-        this.transactions = Storage.getTransactions();
-
-        this.render();
-
-        Dashboard.refresh();
-
-        if (typeof ChartManager !== "undefined") {
-
-            ChartManager.update();
-
-        }
-
-    },
-
-    //  edit transactions 
+    // ============================
+    // Edit Transaction
+    // ============================
 
     editTransaction(id) {
 
-        const transactions = Storage.getTransactions();
+        const transaction = this.transactions.find(
 
-        const transaction = transactions.find(t => t.id == id);
+            t => t.id == id
+
+        );
 
         if (!transaction) return;
 
@@ -402,19 +408,54 @@ const Transactions = {
 
         document.getElementById("amount").value = transaction.amount;
 
-        document.querySelector(".modal-header h2").textContent = "Edit Transaction";
+        document.querySelector(".modal-header h2").textContent =
 
-        document.querySelector(".save").innerHTML =
+            "Edit Transaction";
 
-            `<i class="fa-solid fa-floppy-disk"></i> Save Changes`;
+        const saveBtn = document.getElementById("saveTransactionBtn");
 
-        document.getElementById("modal").classList.add("active");
+        saveBtn.innerHTML = `
+    <i class="fa-solid fa-floppy-disk"></i>
+    Save Changes
+`;
+
+        this.modal.classList.add("active");
 
     },
 
-    // =====================================
-    // Refresh Table
-    // =====================================
+    // ============================
+    // Delete Transaction
+    // ============================
+
+    deleteTransaction(id) {
+
+        if (!confirm("Delete this transaction?")) {
+
+            return;
+
+        }
+
+        Storage.deleteTransaction(id);
+
+        this.transactions = Storage.getTransactions();
+
+        Dashboard.refresh();
+
+        this.render();
+
+        if (typeof ChartManager !== "undefined") {
+
+            ChartManager.update();
+
+        }
+
+        Utils.showToast("Transaction deleted successfully");
+
+    },
+
+    // ============================
+    // Refresh
+    // ============================
 
     refresh() {
 
@@ -424,9 +465,9 @@ const Transactions = {
 
     },
 
-    // =====================================
+    // ============================
     // Helpers
-    // =====================================
+    // ============================
 
     capitalize(text) {
 
@@ -438,36 +479,26 @@ const Transactions = {
 
     formatDate(date) {
 
-        const options = {
+        return new Date(date).toLocaleDateString(
 
-            day: "2-digit",
+            "en-IN",
 
-            month: "short",
+            {
 
-            year: "numeric"
+                day: "2-digit",
 
-        };
+                month: "short",
 
-        return new Date(date)
+                year: "numeric"
 
-            .toLocaleDateString(
+            }
 
-                "en-IN",
-
-                options
-
-            );
+        );
 
     },
-
-    /* ==========================================================
-   Part 4C
-   Search • Filter • Initialization
-==========================================================*/
-
-    // =====================================
+    // ============================
     // Search Transactions
-    // =====================================
+    // ============================
 
     search(keyword) {
 
@@ -493,9 +524,9 @@ const Transactions = {
 
     },
 
-    // =====================================
+    // ============================
     // Filter Transactions
-    // =====================================
+    // ============================
 
     filter(type) {
 
@@ -513,51 +544,57 @@ const Transactions = {
 
     },
 
-    // =====================================
-    // Search + Filter Together
-    // =====================================
+    // ============================
+    // Apply Search + Filter
+    // ============================
 
     applyFilters() {
 
-        const searchInput = document.getElementById("search");
+        const search = document
 
-        const filterSelect = document.getElementById("filter");
+            .getElementById("search")
 
-        let data = [...this.transactions];
-
-        // Filter
-
-        if (filterSelect.value !== "all") {
-
-            data = data.filter(transaction =>
-
-                transaction.type === filterSelect.value
-
-            );
-
-        }
-
-        // Search
-
-        const keyword = searchInput.value
+            .value
 
             .toLowerCase()
 
             .trim();
 
-        if (keyword !== "") {
+        const filter = document
+
+            .getElementById("filter")
+
+            .value;
+
+        let data = [...this.transactions];
+
+        if (filter !== "all") {
+
+            data = data.filter(
+
+                transaction => transaction.type === filter
+
+            );
+
+        }
+
+        if (search !== "") {
 
             data = data.filter(transaction =>
 
                 transaction.description
+
                     .toLowerCase()
-                    .includes(keyword)
+
+                    .includes(search)
 
                 ||
 
                 transaction.category
+
                     .toLowerCase()
-                    .includes(keyword)
+
+                    .includes(search)
 
             );
 
@@ -567,49 +604,59 @@ const Transactions = {
 
     },
 
-    // =====================================
-    // Register Search & Filter Events
-    // =====================================
+    // ============================
+    // Search Events
+    // ============================
 
     registerSearchFilterEvents() {
 
-        const searchInput = document.getElementById("search");
+        const search = document.getElementById("search");
 
-        const filterSelect = document.getElementById("filter");
+        const filter = document.getElementById("filter");
 
-        searchInput.addEventListener(
+        if (search) {
 
-            "input",
+            search.addEventListener(
 
-            () => this.applyFilters()
+                "input",
 
-        );
+                () => this.applyFilters()
 
-        filterSelect.addEventListener(
+            );
 
-            "change",
+        }
 
-            () => this.applyFilters()
+        if (filter) {
 
-        );
+            filter.addEventListener(
+
+                "change",
+
+                () => this.applyFilters()
+
+            );
+
+        }
 
     },
 
-    // =====================================
-    // Load Initial Data
-    // =====================================
+    // ============================
+    // Load Transactions
+    // ============================
 
     load() {
 
-        this.transactions = Storage.getTransactions();
+        this.transactions =
+
+            Storage.getTransactions();
 
         this.render();
 
     },
 
-    // =====================================
-    // Start Module
-    // =====================================
+    // ============================
+    // Start
+    // ============================
 
     start() {
 
