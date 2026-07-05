@@ -18,15 +18,7 @@ const Dashboard = {
     this.countEl = document.getElementById("count");
 
     // Load logged in user
-    const profile = Storage.getProfile();
-
-    const profileName = document.getElementById("profileName");
-
-    if (profileName) {
-
-        profileName.textContent = profile.name;
-
-    }
+    Utils.loadProfile();
 
     this.update();
 

@@ -89,21 +89,39 @@ if(registerForm){
 
         }
 
-        const user={
+       const user = {
 
-            username,
+    username,
 
-            password
+    password
 
-        };
+};
 
-        localStorage.setItem(
+// Save login credentials
+localStorage.setItem(
 
-            USER_KEY,
+    USER_KEY,
 
-            JSON.stringify(user)
+    JSON.stringify(user)
 
-        );
+);
+
+// Save profile
+Storage.saveProfile({
+
+    name: username,
+
+    currency: "USD"
+
+});
+
+Utils.showToast("Registration Successful!");
+
+setTimeout(() => {
+
+    window.location.href = "index.html";
+
+}, 800);
         
         Utils.showToast("Registration Successful!");
 
@@ -147,39 +165,33 @@ if(loginForm){
 
         }
 
-        if(
+       if (
 
-            username===user.username &&
+    username === user.username &&
 
-            password===user.password
+    password === user.password
 
-        ){
+) {
 
-            localStorage.setItem(
+    localStorage.setItem(
 
-                "loggedIn",
+        "loggedIn",
 
-                "true"
+        "true"
 
-            );
+    );
 
-            localStorage.setItem(
+    Storage.saveProfile({
 
-                "profile",
+        name: user.username,
 
-                JSON.stringify({
+        currency: Storage.getProfile().currency || "USD"
 
-                    name:user.username,
+    });
 
-                    currency:"USD"
+    window.location.href = "dashboard.html";
 
-                })
-
-            );
-
-            window.location.href="dashboard.html";
-
-        }else{
+}else{
 
             Utils.showToast("Invalid username or password.");
 
